@@ -1,18 +1,21 @@
 .PHONY: clean build run stop inspect
 
-IMAGE_NAME = nikos/alpine-python3-flask
+IMAGE_NAME = mjaow/alpine-python3-flask
 CONTAINER_NAME = flask-demoapp
 
 build:
-	docker build -t $(IMAGE_NAME) .
+	docker build --network=host -t $(IMAGE_NAME) .
+
+push:
+	docker push $(IMAGE_NAME)
 
 release:
-	docker build \
+	docker build  --network=host \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` -t $(IMAGE_NAME) .
 
 run:
-	docker run --rm -p 5000:5000 --name $(CONTAINER_NAME) $(IMAGE_NAME)
+	docker run --rm -p 5000:5000 -e app=one --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
 inspect:
 	docker inspect $(CONTAINER_NAME)

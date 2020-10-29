@@ -1,12 +1,13 @@
 import os
 
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/score')
 def hello():
-    return 'Hello Flask from alpine-linux!'
+    name = os.environ.get('app','none')
+    return 'Hello Flask from app: <'+name+'>. Here is the path after rewriting <'+request.path+'> !'
 
 
 if __name__ == '__main__':
